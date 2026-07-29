@@ -116,15 +116,21 @@ document.querySelectorAll(".print-carousel").forEach((carousel) => {
   });
 
   let scrollRaf = null;
+  let settleTimeout = null;
   track.addEventListener(
     "scroll",
     () => {
       if (scrollRaf) return;
       scrollRaf = requestAnimationFrame(() => {
         setActiveDot(currentIndex());
-        applyAspect(currentIndex());
         scrollRaf = null;
       });
+
+      // Only resize the box once the swipe/scroll has settled — resizing
+      // mid-drag (based on a still-changing rounded index) clips the photo
+      // being dragged into view.
+      clearTimeout(settleTimeout);
+      settleTimeout = setTimeout(() => applyAspect(currentIndex()), 120);
     },
     { passive: true }
   );
