@@ -80,8 +80,17 @@ document.querySelectorAll(".print-carousel").forEach((carousel) => {
     });
   }
 
+  // Slides with a data-aspect hint (e.g. the Achievements feature card) resize
+  // the carousel box to match each photo's own shape, so no letterboxing shows.
+  function applyAspect(index) {
+    const ratio = slides[index].dataset.aspect;
+    if (ratio) carousel.style.aspectRatio = ratio;
+  }
+  applyAspect(0);
+
   function goToSlide(index) {
     track.scrollTo({ left: track.clientWidth * index, behavior: scrollBehavior() });
+    applyAspect(index);
   }
 
   const dots = slides.map((_, index) => {
@@ -113,6 +122,7 @@ document.querySelectorAll(".print-carousel").forEach((carousel) => {
       if (scrollRaf) return;
       scrollRaf = requestAnimationFrame(() => {
         setActiveDot(currentIndex());
+        applyAspect(currentIndex());
         scrollRaf = null;
       });
     },
