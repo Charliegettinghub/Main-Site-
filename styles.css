@@ -486,6 +486,24 @@ ol, ul { margin: 0; padding: 0; list-style: none; }
   opacity: 1;
 }
 
+.card--feature {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.card__photo {
+  order: -1;
+  aspect-ratio: 3 / 2;
+  border-radius: 8px 8px 0 0;
+  box-shadow: var(--shadow);
+  margin: -2.25rem -2rem 1.5rem;
+  overflow: hidden;
+  background: var(--bg-2);
+}
+.card__photo .print-carousel__slide {
+  object-fit: contain;
+}
+
 .card__num {
   display: block;
   font-family: var(--font-mono);
