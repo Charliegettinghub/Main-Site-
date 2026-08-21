@@ -735,6 +735,53 @@ ol, ul { margin: 0; padding: 0; list-style: none; }
   font-size: 0.92rem;
 }
 
+/* ---------------- Staff ---------------- */
+
+.staff-card {
+  max-width: 640px;
+  background: var(--bg-1);
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  transition: transform 0.25s var(--ease), box-shadow 0.25s var(--ease);
+}
+.staff-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-lg);
+}
+
+.staff-card__photos {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+.staff-card__photo {
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+  display: block;
+}
+
+.staff-card__info {
+  padding: 1.75rem 2rem 2rem;
+}
+.staff-card__info h3 {
+  font-size: 1.15rem;
+  font-weight: 500;
+  margin-bottom: 0.3rem;
+}
+.staff-card__spec {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 0.7rem;
+}
+.staff-card__info p:not(.staff-card__spec) {
+  color: var(--ink-1);
+  font-size: 0.95rem;
+}
+
 /* ---------------- Contact ---------------- */
 
 .contact__grid {
@@ -845,6 +892,9 @@ ol, ul { margin: 0; padding: 0; list-style: none; }
 
   .print-card:nth-child(2n),
   .print-card:nth-child(3n) { transform: none; }
+
+  .staff-card__photos { grid-template-columns: 1fr; }
+  .staff-card__photo { aspect-ratio: 4 / 3; }
 
   .footer { flex-direction: column; gap: 0.5rem; }
 }
