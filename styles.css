@@ -737,8 +737,17 @@ ol, ul { margin: 0; padding: 0; list-style: none; }
 
 /* ---------------- Staff ---------------- */
 
+.staff-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+  max-width: 960px;
+}
+@media (min-width: 800px) {
+  .staff-grid { grid-template-columns: 1fr 1fr; }
+}
+
 .staff-card {
-  max-width: 640px;
   background: var(--bg-1);
   border-radius: 10px;
   overflow: hidden;
@@ -753,6 +762,9 @@ ol, ul { margin: 0; padding: 0; list-style: none; }
 .staff-card__photos {
   display: grid;
   grid-template-columns: 1fr 1fr;
+}
+.staff-card__photos--single {
+  grid-template-columns: 1fr;
 }
 .staff-card__photo {
   width: 100%;
