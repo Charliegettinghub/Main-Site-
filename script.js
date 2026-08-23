@@ -56,7 +56,7 @@ if (printsToggle) {
   printsToggle.addEventListener("click", () => {
     const expanded = printGrid.classList.toggle("is-expanded");
     printsToggle.setAttribute("aria-expanded", expanded);
-    printsToggle.textContent = expanded ? "Show fewer prints" : "Show 2 more prints";
+    printsToggle.textContent = expanded ? "Tap to see fewer projects" : "Tap to see more projects";
   });
 }
 

@@ -266,13 +266,17 @@ ol, ul { margin: 0; padding: 0; list-style: none; }
   filter: brightness(1.06);
 }
 .btn--outline {
-  background: transparent;
+  appearance: none;
+  -webkit-appearance: none;
+  font: inherit;
+  background: var(--bg-2);
   border: 1px solid var(--line-strong);
   color: var(--ink-0);
   cursor: pointer;
 }
 .btn--outline:hover {
-  border-color: var(--accent);
+  background: var(--bg-3);
+  border-color: var(--accent-line);
   color: var(--accent);
   transform: translateY(-2px);
 }
@@ -752,11 +756,14 @@ ol, ul { margin: 0; padding: 0; list-style: none; }
 .staff-grid {
   display: grid;
   grid-template-columns: 1fr;
+  align-items: start;
   gap: 2rem;
   max-width: 960px;
 }
 @media (min-width: 800px) {
   .staff-grid { grid-template-columns: 1fr 1fr; }
+  .staff-card__photos { aspect-ratio: 3 / 4; }
+  .staff-card__photo { height: 100%; aspect-ratio: auto; }
 }
 
 .staff-card {
