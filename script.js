@@ -49,6 +49,17 @@ window.addEventListener(
   { passive: true }
 );
 
+// Prints "show more" toggle
+const printsToggle = document.getElementById("printsToggle");
+if (printsToggle) {
+  const printGrid = document.querySelector(".print-grid");
+  printsToggle.addEventListener("click", () => {
+    const expanded = printGrid.classList.toggle("is-expanded");
+    printsToggle.setAttribute("aria-expanded", expanded);
+    printsToggle.textContent = expanded ? "Show fewer prints" : "Show 2 more prints";
+  });
+}
+
 // Print card photo carousels (Instagram-style swipe/dots/arrows)
 const prefersReducedMotionForCarousel = window.matchMedia(
   "(prefers-reduced-motion: reduce)"

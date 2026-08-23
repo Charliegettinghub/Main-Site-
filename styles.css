@@ -265,6 +265,17 @@ ol, ul { margin: 0; padding: 0; list-style: none; }
   transform: translateY(-2px);
   filter: brightness(1.06);
 }
+.btn--outline {
+  background: transparent;
+  border: 1px solid var(--line-strong);
+  color: var(--ink-0);
+  cursor: pointer;
+}
+.btn--outline:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  transform: translateY(-2px);
+}
 
 /* ---------------- Sections (shared) ---------------- */
 
@@ -426,7 +437,7 @@ ol, ul { margin: 0; padding: 0; list-style: none; }
   flex: none;
 }
 
-/* ---------------- Card grid (Achievements) — bento: 1 feature + 2 ---------------- */
+/* ---------------- Card grid (Achievements) ---------------- */
 
 .card-grid {
   display: grid;
@@ -656,6 +667,19 @@ ol, ul { margin: 0; padding: 0; list-style: none; }
 .print-card p:not(.print-card__spec) {
   color: var(--ink-1);
   font-size: 0.9rem;
+}
+
+.print-card--extra {
+  display: none;
+}
+.print-grid.is-expanded .print-card--extra {
+  display: block;
+}
+
+.print-grid__toggle-wrap {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 3.5rem;
 }
 
 .print-cta {
