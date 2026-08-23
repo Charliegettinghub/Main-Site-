@@ -246,18 +246,6 @@ ol, ul { margin: 0; padding: 0; list-style: none; }
   color: var(--ink-1);
 }
 
-.hero__meta {
-  font-family: var(--font-mono);
-  font-size: 0.8rem;
-  color: var(--ink-2);
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 0.6em;
-  margin-bottom: 2.75rem;
-}
-.dividerslash { color: var(--accent-line); }
-
 .btn {
   font-family: var(--font-mono);
   font-size: 0.85rem;
