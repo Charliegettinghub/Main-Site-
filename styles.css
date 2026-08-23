@@ -763,6 +763,7 @@ ol, ul { margin: 0; padding: 0; list-style: none; }
 @media (min-width: 800px) {
   .staff-grid { grid-template-columns: 1fr 1fr; }
   .staff-card__photos { aspect-ratio: 3 / 4; }
+  .staff-card__photos:not(.staff-card__photos--single) { aspect-ratio: 4 / 3; }
   .staff-card__photo { height: 100%; aspect-ratio: auto; }
 }
 
