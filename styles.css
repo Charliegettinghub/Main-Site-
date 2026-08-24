@@ -791,10 +791,6 @@ ol, ul { margin: 0; padding: 0; list-style: none; }
   flex: none;
 }
 
-.price-card--feature {
-  border: 1px solid var(--accent-line);
-}
-
 .price-card--custom {
   flex: 1;
   background: var(--bg-2);
