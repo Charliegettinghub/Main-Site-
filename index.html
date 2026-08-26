@@ -117,7 +117,7 @@
               project of that scale and gave me real experience seeing an
               event come together from the ground up.</p>
           </div>
-          <span class="timeline__tag">current</span>
+          <span class="timeline__tag timeline__tag--past">summer internship</span>
         </li>
       </ol>
     </div>
@@ -293,6 +293,17 @@
       and priced by quantity.
     </p>
 
+    <button class="gallery-trigger reveal" id="centerpiecesGalleryBtn" type="button">
+      <span>Click to see examples of my work</span>
+      <span class="gallery-trigger__arrow" aria-hidden="true">↗</span>
+    </button>
+
+    <ul class="lightbox-source" id="centerpiecesPhotos" hidden>
+      <li><img src="assets/centerpieces/example-1.jpg" alt="Oklahoma table number centerpiece with a hand-numbered card, on a display shelf"></li>
+      <li><img src="assets/centerpieces/example-2.jpg" alt="Close-up of the table number centerpiece frame holding a numbered card"></li>
+      <li><img src="assets/centerpieces/example-3.jpg" alt="Another angle of the table number centerpiece on display"></li>
+    </ul>
+
     <div class="price-grid reveal">
       <article class="price-card">
         <span class="price-card__tag">Frame Only</span>
@@ -423,6 +434,19 @@
   <span>© <span id="year"></span> Charlie Williams</span>
   <span class="footer__rev">SITE REV. 01</span>
 </footer>
+
+<div class="lightbox" id="centerpiecesLightbox" hidden>
+  <div class="lightbox__backdrop" data-lightbox-close></div>
+  <div class="lightbox__dialog" role="dialog" aria-modal="true" aria-label="Centerpiece examples">
+    <button class="lightbox__close" type="button" aria-label="Close" data-lightbox-close>&times;</button>
+    <div class="lightbox__stage">
+      <button class="lightbox__arrow lightbox__arrow--prev" type="button" aria-label="Previous photo">‹</button>
+      <img class="lightbox__img" src="" alt="">
+      <button class="lightbox__arrow lightbox__arrow--next" type="button" aria-label="Next photo">›</button>
+    </div>
+    <div class="lightbox__dots" role="tablist" aria-label="Photo navigation"></div>
+  </div>
+</div>
 
 <script src="script.js"></script>
 </body>

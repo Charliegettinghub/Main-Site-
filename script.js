@@ -60,6 +60,78 @@ if (printsToggle) {
   });
 }
 
+// Centerpieces example gallery (lightbox)
+const galleryBtn = document.getElementById("centerpiecesGalleryBtn");
+const lightbox = document.getElementById("centerpiecesLightbox");
+if (galleryBtn && lightbox) {
+  const photos = Array.from(
+    document.querySelectorAll("#centerpiecesPhotos img")
+  ).map((img) => ({ src: img.src, alt: img.alt }));
+
+  const stage = lightbox.querySelector(".lightbox__stage");
+  const imgEl = lightbox.querySelector(".lightbox__img");
+  const prevBtn = lightbox.querySelector(".lightbox__arrow--prev");
+  const nextBtn = lightbox.querySelector(".lightbox__arrow--next");
+  const dotsContainer = lightbox.querySelector(".lightbox__dots");
+  let index = 0;
+  let lastFocused = null;
+
+  const dots = photos.map((_, i) => {
+    const dot = document.createElement("button");
+    dot.className = "lightbox__dot";
+    dot.setAttribute("role", "tab");
+    dot.setAttribute("aria-label", `Photo ${i + 1} of ${photos.length}`);
+    dot.addEventListener("click", () => showPhoto(i));
+    dotsContainer.appendChild(dot);
+    return dot;
+  });
+
+  if (photos.length < 2) {
+    prevBtn.hidden = true;
+    nextBtn.hidden = true;
+    dotsContainer.hidden = true;
+  }
+
+  function showPhoto(i) {
+    index = (i + photos.length) % photos.length;
+    imgEl.src = photos[index].src;
+    imgEl.alt = photos[index].alt;
+    dots.forEach((dot, d) => {
+      dot.classList.toggle("is-active", d === index);
+      dot.setAttribute("aria-selected", d === index);
+    });
+  }
+
+  function openLightbox() {
+    lastFocused = document.activeElement;
+    showPhoto(0);
+    lightbox.hidden = false;
+    document.body.style.overflow = "hidden";
+    lightbox.querySelector(".lightbox__close").focus();
+  }
+
+  function closeLightbox() {
+    lightbox.hidden = true;
+    document.body.style.overflow = "";
+    if (lastFocused) lastFocused.focus();
+  }
+
+  galleryBtn.addEventListener("click", openLightbox);
+  prevBtn.addEventListener("click", () => showPhoto(index - 1));
+  nextBtn.addEventListener("click", () => showPhoto(index + 1));
+
+  lightbox.querySelectorAll("[data-lightbox-close]").forEach((el) => {
+    el.addEventListener("click", closeLightbox);
+  });
+
+  document.addEventListener("keydown", (e) => {
+    if (lightbox.hidden) return;
+    if (e.key === "Escape") closeLightbox();
+    if (e.key === "ArrowLeft") showPhoto(index - 1);
+    if (e.key === "ArrowRight") showPhoto(index + 1);
+  });
+}
+
 // Print card photo carousels (Instagram-style swipe/dots/arrows)
 const prefersReducedMotionForCarousel = window.matchMedia(
   "(prefers-reduced-motion: reduce)"

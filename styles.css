@@ -441,6 +441,14 @@ ol, ul { margin: 0; padding: 0; list-style: none; }
   flex: none;
 }
 
+.timeline__tag--past {
+  color: var(--ink-2);
+  background: rgba(255, 255, 255, 0.06);
+}
+.timeline__tag--past::before {
+  background: var(--ink-2);
+}
+
 /* ---------------- Card grid (Achievements) ---------------- */
 
 .card-grid {
@@ -801,6 +809,144 @@ ol, ul { margin: 0; padding: 0; list-style: none; }
 .price-card__cta {
   align-self: flex-start;
   margin-top: 0.25rem;
+}
+
+.gallery-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 2.5rem;
+  padding: 0.85rem 1.4rem;
+  background: var(--bg-1);
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  color: var(--ink-0);
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: border-color 0.2s var(--ease), transform 0.2s var(--ease), background 0.2s var(--ease);
+}
+.gallery-trigger:hover {
+  border-color: var(--accent-line);
+  background: var(--bg-2);
+  transform: translateY(-2px);
+}
+.gallery-trigger__arrow {
+  color: var(--accent);
+  transition: transform 0.2s var(--ease);
+}
+.gallery-trigger:hover .gallery-trigger__arrow {
+  transform: translate(2px, -2px);
+}
+
+.lightbox-source { display: none; }
+
+/* ---------------- Lightbox ---------------- */
+
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4vh 4vw;
+}
+.lightbox[hidden] { display: none; }
+
+.lightbox__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(10, 10, 11, 0.86);
+  backdrop-filter: blur(4px);
+}
+
+.lightbox__dialog {
+  position: relative;
+  width: 100%;
+  max-width: 900px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.lightbox__close {
+  position: absolute;
+  top: -2.75rem;
+  right: 0;
+  width: 2.25rem;
+  height: 2.25rem;
+  border: none;
+  border-radius: 50%;
+  background: var(--bg-1);
+  color: var(--ink-0);
+  font-size: 1.4rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: background-color 0.2s var(--ease);
+}
+.lightbox__close:hover { background: var(--accent-fill); }
+
+.lightbox__stage {
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--bg-1);
+  box-shadow: var(--shadow-lg);
+}
+
+.lightbox__img {
+  display: block;
+  width: 100%;
+  max-height: 78vh;
+  object-fit: contain;
+  background: var(--bg-0);
+}
+
+.lightbox__arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 2.5rem;
+  height: 2.5rem;
+  border: none;
+  border-radius: 50%;
+  background: rgba(13, 14, 15, 0.55);
+  color: #f1efec;
+  font-size: 1.4rem;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.2s var(--ease);
+}
+.lightbox__arrow--prev { left: 0.75rem; }
+.lightbox__arrow--next { right: 0.75rem; }
+.lightbox__arrow:hover { background: var(--accent-fill); }
+
+.lightbox__dots {
+  display: flex;
+  gap: 0.5rem;
+}
+.lightbox__dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  border: none;
+  padding: 0;
+  background: rgba(255, 255, 255, 0.3);
+  cursor: pointer;
+  transition: background-color 0.2s var(--ease), transform 0.2s var(--ease);
+}
+.lightbox__dot.is-active {
+  background: var(--accent);
+  transform: scale(1.2);
 }
 
 .addon-note {
