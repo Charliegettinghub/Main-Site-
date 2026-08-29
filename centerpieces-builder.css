@@ -96,6 +96,10 @@ body {
   gap: 0.6rem;
 }
 
+.field__row[hidden] {
+  display: none;
+}
+
 .field__hint {
   font-family: var(--font-mono);
   font-size: 0.82rem;
