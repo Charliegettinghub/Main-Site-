@@ -659,7 +659,12 @@ function buildCardImageDataUrl(lengthMm, widthMm, cardState) {
 
 function downloadPdf() {
   const dataUrl = buildCardImageDataUrl(state.lengthMm, state.widthMm, state);
+  // jsPDF's default "portrait" orientation silently swaps a custom
+  // [w, h] format array whenever w > h, which would clip/misorient every
+  // landscape-shaped card (the common case). Picking orientation to match
+  // the card's own shape keeps the requested [lengthMm, widthMm] exact.
   const doc = new window.jspdf.jsPDF({
+    orientation: state.lengthMm >= state.widthMm ? "l" : "p",
     unit: "mm",
     format: [state.lengthMm, state.widthMm],
   });
