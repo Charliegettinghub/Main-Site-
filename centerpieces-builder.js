@@ -190,3 +190,33 @@ widthInchHint.textContent = mmToInchLabel(state.widthMm);
 updateDownloadState();
 renderPreview();
 document.fonts.ready.then(renderPreview);
+
+const PDF_DPI = 300;
+
+function buildCardImageDataUrl(lengthMm, widthMm, cardState) {
+  const pxWidth = Math.round((lengthMm / MM_PER_INCH) * PDF_DPI);
+  const pxHeight = Math.round((widthMm / MM_PER_INCH) * PDF_DPI);
+  const offscreen = document.createElement("canvas");
+  offscreen.width = pxWidth;
+  offscreen.height = pxHeight;
+  const ctx = offscreen.getContext("2d");
+  drawCard(ctx, pxWidth, pxHeight, cardState);
+  return offscreen.toDataURL("image/png");
+}
+
+function downloadPdf() {
+  const dataUrl = buildCardImageDataUrl(state.lengthMm, state.widthMm, state);
+  // jsPDF's default orientation ("portrait") silently swaps a custom
+  // [width, height] format's dimensions whenever width > height, which would
+  // otherwise clip our card (most cards are wider than they are tall).
+  // Pick the orientation that already matches the card so no swap happens.
+  const doc = new window.jspdf.jsPDF({
+    unit: "mm",
+    format: [state.lengthMm, state.widthMm],
+    orientation: state.lengthMm >= state.widthMm ? "l" : "p",
+  });
+  doc.addImage(dataUrl, "PNG", 0, 0, state.lengthMm, state.widthMm);
+  doc.save(`centerpiece-card-${state.digits}.pdf`);
+}
+
+downloadBtn.addEventListener("click", downloadPdf);
