@@ -394,6 +394,7 @@ Create `centerpieces-builder.js`:
 const MM_MIN = 20;
 const MM_MAX = 200;
 const MM_PER_INCH = 25.4;
+const CARD_FONT_FAMILY = '"Instrument Sans", sans-serif';
 
 const state = {
   lengthMm: 90,
@@ -437,12 +438,12 @@ function drawCard(ctx, pxWidth, pxHeight, cardState) {
 
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
-  ctx.font = `700 ${fontSize}px "Instrument Sans", sans-serif`;
+  ctx.font = `700 ${fontSize}px ${CARD_FONT_FAMILY}`;
 
   const measuredWidth = ctx.measureText(text).width;
   if (measuredWidth > maxTextWidth) {
     fontSize *= maxTextWidth / measuredWidth;
-    ctx.font = `700 ${fontSize}px "Instrument Sans", sans-serif`;
+    ctx.font = `700 ${fontSize}px ${CARD_FONT_FAMILY}`;
   }
 
   const cx = pxWidth / 2;
