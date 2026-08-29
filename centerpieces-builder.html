@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Number Card Builder — Charlie Williams Centerpieces</title>
+<meta name="description" content="Build a custom centerpiece number card — set exact dimensions, digits, and colors, then download a print-ready PDF.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Instrument+Sans:ital,wght@0,400..700;1,400..700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="centerpieces-builder.css">
+</head>
+<body>
+
+<div class="grid-bg" aria-hidden="true"></div>
+<div class="grid-bg grid-bg--spotlight" aria-hidden="true"></div>
+<div class="grain" aria-hidden="true"></div>
+
+<header class="nav" id="nav">
+  <a class="nav__mark" href="index.html" aria-label="Home">
+    <span class="nav__logo" role="img" aria-label="Charlie Williams logo mark"></span>
+  </a>
+  <nav class="nav__links" aria-label="Primary">
+    <a href="index.html#centerpieces">← Back to site</a>
+  </nav>
+</header>
+
+<main id="main">
+  <div class="builder">
+    <div class="builder__preview">
+      <div class="builder__canvas-frame">
+        <canvas id="previewCanvas" width="360" height="360" aria-label="Live preview of the number card"></canvas>
+      </div>
+      <button class="btn btn--fill" id="downloadBtn" type="button" disabled>Download PDF</button>
+      <p class="builder__hint" id="downloadHint">Print at 100% / actual size — not "fit to page" — for exact dimensions.</p>
+    </div>
+
+    <div class="builder__controls">
+      <div class="builder__intro">
+        <h1>Number Card Builder</h1>
+        <p>Set exact dimensions, digits, and colors for your centerpiece number card, then download a print-ready PDF sized precisely to what you choose.</p>
+      </div>
+
+      <div class="field">
+        <label class="field__label" for="lengthInput">Length (horizontal)</label>
+        <div class="field__row">
+          <input type="number" id="lengthInput" min="20" max="200" step="0.5" value="90">
+          <span class="field__hint">mm <span id="lengthInchHint">(3.54")</span></span>
+        </div>
+        <p class="field__error" id="lengthClampHint" hidden></p>
+      </div>
+
+      <div class="field">
+        <label class="field__label" for="widthInput">Width (vertical)</label>
+        <div class="field__row">
+          <input type="number" id="widthInput" min="20" max="200" step="0.5" value="60">
+          <span class="field__hint">mm <span id="widthInchHint">(2.36")</span></span>
+        </div>
+        <p class="field__error" id="widthClampHint" hidden></p>
+      </div>
+
+      <div class="field">
+        <label class="field__label" for="digitsInput">Digits</label>
+        <input type="text" id="digitsInput" maxlength="3" inputmode="numeric" pattern="[0-9]*" value="5">
+        <p class="field__error" id="digitsError" hidden>Enter 1-3 digits (0-9).</p>
+      </div>
+
+      <div class="field">
+        <label class="field__label" for="bgColorInput">Background color</label>
+        <input type="color" id="bgColorInput" value="#1b1c1e">
+      </div>
+
+      <div class="field">
+        <span class="field__label">Text color</span>
+        <div class="mode-toggle">
+          <label><input type="radio" name="textMode" id="textModeSolid" value="solid" checked> Solid</label>
+          <label><input type="radio" name="textMode" id="textModeTwoColor" value="two-color"> Two-color</label>
+        </div>
+
+        <div class="field__row" id="solidColorField">
+          <label class="field__hint" for="solidColorInput">Color</label>
+          <input type="color" id="solidColorInput" value="#f1efec">
+        </div>
+
+        <div class="field__row" id="twoColorField" hidden>
+          <label class="field__hint" for="innerColorInput">Inner</label>
+          <input type="color" id="innerColorInput" value="#f1efec">
+          <label class="field__hint" for="outlineColorInput">Outline</label>
+          <input type="color" id="outlineColorInput" value="#ff7a33">
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer class="footer">
+  <span>© <span id="year"></span> Charlie Williams</span>
+  <span class="footer__rev">SITE REV. 01</span>
+</footer>
+
+<script src="assets/vendor/jspdf.umd.min.js"></script>
+<script src="script.js"></script>
+<script src="centerpieces-builder.js"></script>
+</body>
+</html>
