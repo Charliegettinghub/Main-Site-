@@ -85,7 +85,6 @@ function sizePreviewCanvas(lengthMm, widthMm) {
   }
   const dpr = window.devicePixelRatio || 1;
   previewCanvas.style.width = `${cssWidth}px`;
-  previewCanvas.style.height = `${cssHeight}px`;
   previewCanvas.width = Math.round(cssWidth * dpr);
   previewCanvas.height = Math.round(cssHeight * dpr);
 }
@@ -177,9 +176,17 @@ outlineColorInput.addEventListener("input", () => {
 });
 
 const downloadBtn = document.getElementById("downloadBtn");
+const downloadHint = document.getElementById("downloadHint");
+const downloadHintDefaultText = downloadHint.textContent;
+const DOWNLOAD_DISABLED_REASON = "Enter 1-3 digits to enable download.";
 
 function updateDownloadState() {
-  downloadBtn.disabled = state.digits.length === 0;
+  const disabled = state.digits.length === 0;
+  downloadBtn.disabled = disabled;
+  downloadBtn.title = disabled ? "Enter 1-3 digits to enable download" : "";
+  downloadHint.textContent = disabled
+    ? `${DOWNLOAD_DISABLED_REASON} ${downloadHintDefaultText}`
+    : downloadHintDefaultText;
 }
 
 // Initial paint (immediate, using whatever font is available) plus a
@@ -205,6 +212,10 @@ function buildCardImageDataUrl(lengthMm, widthMm, cardState) {
 }
 
 function downloadPdf() {
+  if (!window.jspdf || !window.jspdf.jsPDF) {
+    downloadHint.textContent = "PDF library failed to load — please refresh the page and try again.";
+    return;
+  }
   const dataUrl = buildCardImageDataUrl(state.lengthMm, state.widthMm, state);
   // jsPDF's default orientation ("portrait") silently swaps a custom
   // [width, height] format's dimensions whenever width > height, which would

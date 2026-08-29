@@ -54,6 +54,20 @@ body {
   border-radius: 4px;
 }
 
+#downloadBtn {
+  appearance: none;
+  -webkit-appearance: none;
+  font: inherit;
+  border: none;
+  cursor: pointer;
+}
+
+#downloadBtn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  transform: none;
+}
+
 .builder__hint {
   font-family: var(--font-mono);
   font-size: 0.78rem;
@@ -88,6 +102,17 @@ body {
   letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--ink-1);
+}
+
+.field--fieldset {
+  margin: 0 0 1.75rem;
+  padding: 0;
+  border: none;
+  min-width: 0;
+}
+
+.field--fieldset > legend {
+  padding: 0;
 }
 
 .field__row {

@@ -15,6 +15,8 @@
 </head>
 <body>
 
+<a class="skip-link" href="#main">Skip to content</a>
+
 <div class="grid-bg" aria-hidden="true"></div>
 <div class="grid-bg grid-bg--spotlight" aria-hidden="true"></div>
 <div class="grain" aria-hidden="true"></div>
@@ -32,7 +34,7 @@
   <div class="builder">
     <div class="builder__preview">
       <div class="builder__canvas-frame">
-        <canvas id="previewCanvas" width="360" height="360" aria-label="Live preview of the number card"></canvas>
+        <canvas id="previewCanvas" width="360" height="360" role="img" aria-label="Live preview of the number card">Live preview of your custom number card</canvas>
       </div>
       <button class="btn btn--fill" id="downloadBtn" type="button" disabled>Download PDF</button>
       <p class="builder__hint" id="downloadHint">Print at 100% / actual size — not "fit to page" — for exact dimensions.</p>
@@ -47,24 +49,24 @@
       <div class="field">
         <label class="field__label" for="lengthInput">Length (horizontal)</label>
         <div class="field__row">
-          <input type="number" id="lengthInput" min="20" max="200" step="0.5" value="90">
+          <input type="number" id="lengthInput" min="20" max="200" step="0.5" value="90" aria-describedby="lengthClampHint">
           <span class="field__hint">mm <span id="lengthInchHint">(3.54")</span></span>
         </div>
-        <p class="field__error" id="lengthClampHint" hidden></p>
+        <p class="field__error" id="lengthClampHint" aria-live="polite" hidden></p>
       </div>
 
       <div class="field">
         <label class="field__label" for="widthInput">Width (vertical)</label>
         <div class="field__row">
-          <input type="number" id="widthInput" min="20" max="200" step="0.5" value="60">
+          <input type="number" id="widthInput" min="20" max="200" step="0.5" value="60" aria-describedby="widthClampHint">
           <span class="field__hint">mm <span id="widthInchHint">(2.36")</span></span>
         </div>
-        <p class="field__error" id="widthClampHint" hidden></p>
+        <p class="field__error" id="widthClampHint" aria-live="polite" hidden></p>
       </div>
 
       <div class="field">
         <label class="field__label" for="digitsInput">Digits</label>
-        <input type="text" id="digitsInput" maxlength="3" inputmode="numeric" pattern="[0-9]*" value="5">
+        <input type="text" id="digitsInput" maxlength="3" inputmode="numeric" pattern="[0-9]*" value="5" aria-describedby="digitsError">
         <p class="field__error" id="digitsError" hidden>Enter 1-3 digits (0-9).</p>
       </div>
 
@@ -73,8 +75,8 @@
         <input type="color" id="bgColorInput" value="#1b1c1e">
       </div>
 
-      <div class="field">
-        <span class="field__label">Text color</span>
+      <fieldset class="field field--fieldset">
+        <legend class="field__label">Text color</legend>
         <div class="mode-toggle">
           <label><input type="radio" name="textMode" id="textModeSolid" value="solid" checked> Solid</label>
           <label><input type="radio" name="textMode" id="textModeTwoColor" value="two-color"> Two-color</label>
@@ -91,7 +93,7 @@
           <label class="field__hint" for="outlineColorInput">Outline</label>
           <input type="color" id="outlineColorInput" value="#ff7a33">
         </div>
-      </div>
+      </fieldset>
     </div>
   </div>
 </main>
