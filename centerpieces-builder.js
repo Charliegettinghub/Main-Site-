@@ -1,7 +1,13 @@
 const MM_MIN = 20;
 const MM_MAX = 200;
 const MM_PER_INCH = 25.4;
-const CARD_FONT_FAMILY = '"Instrument Sans", sans-serif';
+const FONT_OPTIONS = {
+  sans: { label: "Bold Sans", cssFamily: '"Instrument Sans", sans-serif', weight: 700 },
+  mono: { label: "Monospace", cssFamily: '"IBM Plex Mono", monospace', weight: 600 },
+  serif: { label: "Classic Serif", cssFamily: '"Playfair Display", serif', weight: 700 },
+  serifLight: { label: "Refined Serif", cssFamily: '"Cormorant Garamond", serif', weight: 600 },
+  script: { label: "Script", cssFamily: '"Great Vibes", cursive', weight: 400 },
+};
 
 const state = {
   lengthMm: 90,
@@ -12,6 +18,8 @@ const state = {
   solidColor: "#f1efec",
   innerColor: "#f1efec",
   outlineColor: "#ff7a33",
+  fontFamily: "sans",
+  fontSizeScale: 1,
 };
 
 function clampMm(value) {
@@ -39,35 +47,58 @@ function drawCard(ctx, pxWidth, pxHeight, cardState) {
   const text = cardState.digits;
   if (!text) return;
 
+  const chars = text.split("");
+  const isTwoColor = cardState.textMode === "two-color";
+  const fontOption = FONT_OPTIONS[cardState.fontFamily] || FONT_OPTIONS.sans;
+
   const maxTextWidth = pxWidth * 0.86;
   const maxTextHeight = pxHeight * 0.8;
-  let fontSize = maxTextHeight;
+  const heightCeiling = pxHeight * 0.92;
 
-  ctx.textAlign = "center";
+  let fontSize = Math.min(maxTextHeight * cardState.fontSizeScale, heightCeiling);
+
+  ctx.textAlign = "left";
   ctx.textBaseline = "middle";
-  ctx.font = `700 ${fontSize}px ${CARD_FONT_FAMILY}`;
+  ctx.lineJoin = "round";
+  ctx.miterLimit = 2;
 
-  const measuredWidth = ctx.measureText(text).width;
-  if (measuredWidth > maxTextWidth) {
-    fontSize *= maxTextWidth / measuredWidth;
-    ctx.font = `700 ${fontSize}px ${CARD_FONT_FAMILY}`;
+  // Measures per-character widths and the total block width (including an
+  // inter-character gap in two-color mode) at a given font size. The gap
+  // equals the outline's own stroke width, so adjacent digits' outlines —
+  // which each bulge outward by roughly half their stroke width — can never
+  // touch, regardless of digit count or how thick the outline is.
+  function measureLayout(size) {
+    ctx.font = `${fontOption.weight} ${size}px ${fontOption.cssFamily}`;
+    const strokeWidth = isTwoColor ? size * 0.16 : 0;
+    const gap = isTwoColor ? strokeWidth : 0;
+    const widths = chars.map((c) => ctx.measureText(c).width);
+    const totalWidth = widths.reduce((sum, w) => sum + w, 0) + gap * (chars.length - 1);
+    return { widths, totalWidth, strokeWidth, gap };
+  }
+
+  let layout = measureLayout(fontSize);
+  if (layout.totalWidth > maxTextWidth) {
+    fontSize *= maxTextWidth / layout.totalWidth;
+    layout = measureLayout(fontSize);
   }
 
   const cx = pxWidth / 2;
   const cy = pxHeight / 2;
+  let x = cx - layout.totalWidth / 2;
 
-  if (cardState.textMode === "two-color") {
-    ctx.lineJoin = "round";
-    ctx.miterLimit = 2;
-    ctx.lineWidth = fontSize * 0.16;
-    ctx.strokeStyle = cardState.outlineColor;
-    ctx.strokeText(text, cx, cy);
-    ctx.fillStyle = cardState.innerColor;
-    ctx.fillText(text, cx, cy);
-  } else {
-    ctx.fillStyle = cardState.solidColor;
-    ctx.fillText(text, cx, cy);
-  }
+  chars.forEach((char, i) => {
+    if (isTwoColor) {
+      ctx.lineWidth = layout.strokeWidth;
+      ctx.strokeStyle = cardState.outlineColor;
+      ctx.strokeText(char, x, cy);
+      ctx.fillStyle = cardState.innerColor;
+      ctx.fillText(char, x, cy);
+    } else {
+      ctx.fillStyle = cardState.solidColor;
+      ctx.fillText(char, x, cy);
+    }
+    x += layout.widths[i] + layout.gap;
+  });
 }
 
 const previewCanvas = document.getElementById("previewCanvas");
@@ -113,6 +144,8 @@ const twoColorField = document.getElementById("twoColorField");
 const solidColorInput = document.getElementById("solidColorInput");
 const innerColorInput = document.getElementById("innerColorInput");
 const outlineColorInput = document.getElementById("outlineColorInput");
+const fontFamilyInput = document.getElementById("fontFamilyInput");
+const fontSizeInput = document.getElementById("fontSizeInput");
 
 function handleDimensionInput(input, hintEl, clampHintEl, key) {
   input.addEventListener("change", () => {
@@ -172,6 +205,16 @@ innerColorInput.addEventListener("input", () => {
 });
 outlineColorInput.addEventListener("input", () => {
   state.outlineColor = outlineColorInput.value;
+  renderPreview();
+});
+
+fontFamilyInput.addEventListener("change", () => {
+  state.fontFamily = fontFamilyInput.value;
+  renderPreview();
+});
+
+fontSizeInput.addEventListener("input", () => {
+  state.fontSizeScale = parseFloat(fontSizeInput.value);
   renderPreview();
 });
 
