@@ -4,8 +4,7 @@ const MM_PER_INCH = 25.4;
 const FONT_OPTIONS = {
   sans: { label: "Bold Sans", cssFamily: '"Instrument Sans", sans-serif', weight: 700 },
   mono: { label: "Monospace", cssFamily: '"IBM Plex Mono", monospace', weight: 600 },
-  serif: { label: "Classic Serif", cssFamily: '"Playfair Display", serif', weight: 700 },
-  serifLight: { label: "Refined Serif", cssFamily: '"Cormorant Garamond", serif', weight: 600 },
+  serif: { label: "Editorial Serif", cssFamily: '"Bodoni Moda", serif', weight: 700 },
   script: { label: "Script", cssFamily: '"Great Vibes", cursive', weight: 400 },
 };
 
