@@ -8,7 +8,7 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Instrument+Sans:ital,wght@0,400..700;1,400..700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Instrument+Sans:ital,wght@0,400..700;1,400..700&family=Instrument+Serif:ital@0;1&family=Playfair+Display:wght@700&family=Cormorant+Garamond:wght@600;700&family=Great+Vibes&display=swap" rel="stylesheet">
 
 <link rel="stylesheet" href="styles.css">
 <link rel="stylesheet" href="centerpieces-builder.css">
@@ -68,6 +68,26 @@
         <label class="field__label" for="digitsInput">Digits</label>
         <input type="text" id="digitsInput" maxlength="3" inputmode="numeric" pattern="[0-9]*" value="5" aria-describedby="digitsError">
         <p class="field__error" id="digitsError" hidden>Enter 1-3 digits (0-9).</p>
+      </div>
+
+      <div class="field">
+        <label class="field__label" for="fontFamilyInput">Font style</label>
+        <select id="fontFamilyInput">
+          <option value="sans" selected>Bold Sans</option>
+          <option value="mono">Monospace</option>
+          <option value="serif">Classic Serif</option>
+          <option value="serifLight">Refined Serif</option>
+          <option value="script">Script</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label class="field__label" for="fontSizeInput">Font size</label>
+        <div class="field__row">
+          <span class="field__hint">Small</span>
+          <input type="range" id="fontSizeInput" min="0.6" max="1.3" step="0.05" value="1">
+          <span class="field__hint">Large</span>
+        </div>
       </div>
 
       <div class="field">

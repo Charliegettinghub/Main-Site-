@@ -154,7 +154,8 @@ body {
   max-width: 8rem;
 }
 
-.field input:focus-visible {
+.field input:focus-visible,
+.field select:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 1px;
 }
@@ -166,6 +167,26 @@ body {
   border: 1px solid var(--line-strong);
   border-radius: 4px;
   background: var(--bg-2);
+  cursor: pointer;
+}
+
+.field select {
+  appearance: none;
+  -webkit-appearance: none;
+  background: var(--bg-2);
+  border: 1px solid var(--line-strong);
+  border-radius: 4px;
+  color: var(--ink-0);
+  font-family: var(--font-body);
+  font-size: 1rem;
+  padding: 0.6rem 0.75rem;
+  width: 100%;
+  cursor: pointer;
+}
+
+.field input[type="range"] {
+  flex: 1;
+  accent-color: var(--accent);
   cursor: pointer;
 }
 
