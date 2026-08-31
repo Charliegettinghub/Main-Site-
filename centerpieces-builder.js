@@ -68,7 +68,7 @@ function drawCard(ctx, pxWidth, pxHeight, cardState) {
   // touch, regardless of digit count or how thick the outline is.
   function measureLayout(size) {
     ctx.font = `${fontOption.weight} ${size}px ${fontOption.cssFamily}`;
-    const strokeWidth = isTwoColor ? size * 0.16 : 0;
+    const strokeWidth = isTwoColor ? size * 0.045 : 0;
     const gap = isTwoColor ? strokeWidth : 0;
     const widths = chars.map((c) => ctx.measureText(c).width);
     const totalWidth = widths.reduce((sum, w) => sum + w, 0) + gap * (chars.length - 1);
