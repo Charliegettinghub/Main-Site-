@@ -10,7 +10,7 @@
   :root {
     --page-bg: #f6f5f3; --page-ink-0: #1b1c1e; --page-ink-1: #6b6d72; --page-line: #e2e0dc; --accent: #ff7a33;
     --bg: #1b1c1e; --ink-0: #f1efec; --ink-1: rgba(241,239,236,0.66); --ink-2: rgba(241,239,236,0.4);
-    --card-accent: #ff9257; --line: rgba(255,146,87,0.4); --chip-bg: #f1efec;
+    --card-accent: #c98a63; --line: rgba(201,138,99,0.32); --chip-bg: #f1efec;
     --grid-line: rgba(255,255,255,0.025); --grid-size: 12px;
   }
   @media (prefers-color-scheme: dark) {
@@ -50,22 +50,14 @@
     -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; -webkit-mask-size: contain; mask-size: contain;
     -webkit-mask-position: left center; mask-position: left center; opacity: 0.9;
   }
-  .row-top { display: flex; align-items: flex-start; justify-content: flex-end; gap: 0.6rem; }
+  .card-top { text-align: center; padding-top: 4%; }
+  .card-top .role { font-family: "IBM Plex Mono", monospace; font-size: 0.46rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--card-accent); display: block; }
+  .card-top .casual { font-family: "Instrument Sans", sans-serif; font-style: italic; font-size: 0.6rem; color: var(--ink-2); display: block; margin-top: 0.2rem; }
 
-  .name-big { font-family: "Instrument Serif", serif; line-height: 0.92; color: var(--ink-0); margin: 14% 0 0; font-size: 2.35rem; }
+  .name-big { text-align: center; font-family: "Instrument Serif", serif; line-height: 0.92; color: var(--ink-0); margin: 0.6rem 0 0; font-size: 2.35rem; }
   .name-big em { font-style: normal; color: var(--card-accent); display: block; }
 
-  .title-block { text-align: right; max-width: 66%; }
-  .title-block .primary { font-family: "IBM Plex Mono", monospace; font-size: 0.48rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--card-accent); line-height: 1.35; display: block; }
-  .title-block .casual { font-family: "Instrument Sans", sans-serif; font-style: italic; font-size: 0.6rem; color: var(--ink-2); display: block; margin-top: 0.2rem; }
-
-  .tear { border-top: 1px dashed var(--line); margin-top: auto; }
-  .fields { display: flex; margin-top: 3%; }
-  .field { flex: 1; min-width: 0; padding-right: 1rem; }
-  .field + .field { border-left: 1px solid var(--line); padding-left: 1rem; }
-  .flabel { font-family: "IBM Plex Mono", monospace; font-size: 0.46rem; letter-spacing: 0.09em; text-transform: uppercase; color: var(--ink-2); display: block; margin-bottom: 0.2rem; }
-  .fvalue { font-family: "IBM Plex Mono", monospace; font-size: 0.54rem; color: var(--ink-1); display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .field--wide { flex: 2.3; }
+  .contact-bar { margin-top: auto; padding-top: 0.65rem; border-top: 1px solid var(--line); display: flex; justify-content: space-between; font-family: "IBM Plex Mono", monospace; font-size: 0.5rem; color: var(--ink-1); }
 
   .bigback { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.8rem; }
   .bigback .mark { width: 28%; opacity: 1; -webkit-mask-position: center; mask-position: center; }
@@ -84,24 +76,18 @@
   <div class="page-head">
     <span class="eyebrow">Mockup · Not Final</span>
     <h1>Business card</h1>
-    <p>Building manager title now sits directly under "Hospitality &amp; Event Professional," no "also" — reads as one clean stacked block.</p>
+    <p>Centered layout: name is the big focal point in the middle of the card, title and casual line sit quietly above it, contact info lives in a bottom bar. No logo on the front — the monogram stays on the back next to the QR.</p>
   </div>
 
   <div class="cards">
     <div class="card-block">
       <div class="card-face">
-        <div class="row-top">
-          <div class="title-block">
-            <span class="primary">Hospitality &amp; Event Professional</span>
-            <span class="casual">OSU Student Union building manager</span>
-          </div>
+        <div class="card-top">
+          <span class="role">Hospitality &amp; Event Professional</span>
+          <span class="casual">OSU Student Union building manager</span>
         </div>
         <p class="name-big">Charlie<em>Williams</em></p>
-        <div class="tear"></div>
-        <div class="fields">
-          <div class="field field--wide"><span class="flabel">Email</span><span class="fvalue">williams.b.charlie@gmail.com</span></div>
-          <div class="field"><span class="flabel">Phone</span><span class="fvalue">918.629.3340</span></div>
-        </div>
+        <div class="contact-bar"><span>williams.b.charlie@gmail.com</span><span>918.629.3340</span></div>
       </div>
       <div class="card-label"><span>Front</span><span>3.5 × 2 in</span></div>
     </div>
@@ -122,7 +108,7 @@
   <div class="meta-note">
     <span><b>Type:</b> Instrument Serif / Instrument Sans / IBM Plex Mono</span>
     <span><b>QR target:</b> charliegettinghub.github.io/Main-Site-</span>
-    <span><b>Palette:</b> #1b1c1e charcoal · #ff9257 accent</span>
+    <span><b>Palette:</b> #1b1c1e charcoal · #c98a63 accent</span>
   </div>
 
 </div>
