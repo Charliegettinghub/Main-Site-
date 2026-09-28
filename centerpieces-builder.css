@@ -366,3 +366,10 @@ body {
   color: var(--ink-0);
   font-weight: 700;
 }
+
+.field__row--stack {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.4rem;
+  margin-top: 0.75rem;
+}

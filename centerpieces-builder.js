@@ -25,6 +25,7 @@ const state = {
   digits: "5",
   rangeFrom: 1,
   rangeTo: 50,
+  rangePad: 1,
   bgMode: "white",
   bgColor: BG_PRESETS.white,
   customBgColor: "#1f4e79",
@@ -164,18 +165,23 @@ function rangeIsValid() {
   return hi - lo + 1 <= MAX_RANGE_CARDS;
 }
 
+// Leading zeros for the range: rangePad 2 turns 5 into "05", 3 into "005".
+function formatRangeNumber(n) {
+  return String(n).padStart(state.rangePad, "0");
+}
+
 function numbersToPrint() {
   if (state.numberMode === "single") return state.digits ? [state.digits] : [];
   if (!rangeIsValid()) return [];
   const [lo, hi] = rangeBounds();
   const out = [];
-  for (let n = lo; n <= hi; n++) out.push(String(n));
+  for (let n = lo; n <= hi; n++) out.push(formatRangeNumber(n));
   return out;
 }
 
 function previewDigits() {
   if (state.numberMode === "single") return state.digits;
-  return rangeIsValid() ? String(rangeBounds()[0]) : "";
+  return rangeIsValid() ? formatRangeNumber(rangeBounds()[0]) : "";
 }
 
 // --- Sheet layout ---
@@ -185,6 +191,9 @@ function previewDigits() {
 const PRINTER_SAFE_MM = 5;
 const MARK_GAP_MM = 1.5;
 const MARK_LEN_MM = 6;
+// A hair of space between neighbouring cards, so each card gets its own
+// cut line instead of two cards sharing one.
+const CARD_GAP_MM = 1;
 
 // Tries every combination of page orientation and card rotation and keeps
 // whichever fits the most cards on one sheet. Ties go to the layout with
@@ -202,12 +211,14 @@ function planSheet(cardW, cardH, paperKey) {
       const cellH = rotated ? cardW : cardH;
       const usableW = page.pageW - PRINTER_SAFE_MM * 2;
       const usableH = page.pageH - PRINTER_SAFE_MM * 2;
-      const cols = Math.floor(usableW / cellW + 1e-9);
-      const rows = Math.floor(usableH / cellH + 1e-9);
+      const pitchX = cellW + CARD_GAP_MM;
+      const pitchY = cellH + CARD_GAP_MM;
+      const cols = Math.floor((usableW + CARD_GAP_MM) / pitchX + 1e-9);
+      const rows = Math.floor((usableH + CARD_GAP_MM) / pitchY + 1e-9);
       const perSheet = cols * rows;
       if (perSheet === 0) continue;
-      const gridW = cols * cellW;
-      const gridH = rows * cellH;
+      const gridW = cols * pitchX - CARD_GAP_MM;
+      const gridH = rows * pitchY - CARD_GAP_MM;
       const marginX = (page.pageW - gridW) / 2;
       const marginY = (page.pageH - gridH) / 2;
       const minMargin = Math.min(marginX, marginY);
@@ -216,54 +227,65 @@ function planSheet(cardW, cardH, paperKey) {
         perSheet > best.perSheet ||
         (perSheet === best.perSheet && minMargin > best.minMargin + 0.01)
       ) {
-        best = { ...page, rotated, cellW, cellH, cols, rows, perSheet, gridW, gridH, marginX, marginY, minMargin };
+        best = { ...page, rotated, cellW, cellH, pitchX, pitchY, cols, rows, perSheet, gridW, gridH, marginX, marginY, minMargin };
       }
     }
   }
   return best;
 }
 
-// Cut guides tailored to the actual grid: a thin grey hairline on every
-// cut (cards are butted edge to edge, so one cut separates two cards) plus
-// crop marks in the margin that extend each cut line past the paper, for
-// lining up a ruler or trimmer.
+// Cut guides tailored to the actual grid: a dashed grey outline around
+// every card (cards sit a hair apart, so each has its own line) plus solid
+// crop marks in the margin that extend each cut past the cards, for lining
+// up a ruler or trimmer.
+function cardOrigin(plan, i) {
+  const col = i % plan.cols;
+  const row = Math.floor(i / plan.cols);
+  return [plan.marginX + col * plan.pitchX, plan.marginY + row * plan.pitchY];
+}
+
 function drawCutGuides(doc, plan, cardCount) {
   const x0 = plan.marginX;
   const y0 = plan.marginY;
   const usedRows = Math.ceil(cardCount / plan.cols);
   const usedCols = Math.min(cardCount, plan.cols);
-  const gridW = usedCols * plan.cellW;
-  const gridH = usedRows * plan.cellH;
+  const gridW = usedCols * plan.pitchX - CARD_GAP_MM;
+  const gridH = usedRows * plan.pitchY - CARD_GAP_MM;
 
   doc.setLineCap("butt");
 
-  // Hairline around every placed card (shared edges overlap exactly), so a
-  // short last row never gets lines running across blank paper.
-  doc.setDrawColor(150, 150, 150);
-  doc.setLineWidth(0.12);
+  // Dashed outline around every placed card, so a short last row never
+  // gets lines running across blank paper.
+  doc.setDrawColor(140, 140, 140);
+  doc.setLineWidth(0.2);
+  doc.setLineDashPattern([1.2, 0.8], 0);
   for (let i = 0; i < cardCount; i++) {
-    const col = i % plan.cols;
-    const row = Math.floor(i / plan.cols);
-    doc.rect(x0 + col * plan.cellW, y0 + row * plan.cellH, plan.cellW, plan.cellH, "S");
+    const [x, y] = cardOrigin(plan, i);
+    doc.rect(x, y, plan.cellW, plan.cellH, "S");
   }
+  doc.setLineDashPattern([], 0);
 
   // Crop marks in the margins, as long as the printable margin allows.
   doc.setDrawColor(0, 0, 0);
-  doc.setLineWidth(0.25);
+  doc.setLineWidth(0.2);
   const topLen = Math.min(MARK_LEN_MM, y0 - MARK_GAP_MM - PRINTER_SAFE_MM);
   const bottomLen = Math.min(MARK_LEN_MM, plan.pageH - (y0 + gridH) - MARK_GAP_MM - PRINTER_SAFE_MM);
   const leftLen = Math.min(MARK_LEN_MM, x0 - MARK_GAP_MM - PRINTER_SAFE_MM);
   const rightLen = Math.min(MARK_LEN_MM, plan.pageW - (x0 + gridW) - MARK_GAP_MM - PRINTER_SAFE_MM);
 
-  for (let c = 0; c <= usedCols; c++) {
-    const x = x0 + c * plan.cellW;
-    if (topLen > 1) doc.line(x, y0 - MARK_GAP_MM, x, y0 - MARK_GAP_MM - topLen);
-    if (bottomLen > 1) doc.line(x, y0 + gridH + MARK_GAP_MM, x, y0 + gridH + MARK_GAP_MM + bottomLen);
+  for (let c = 0; c < usedCols; c++) {
+    const left = x0 + c * plan.pitchX;
+    for (const x of [left, left + plan.cellW]) {
+      if (topLen > 1) doc.line(x, y0 - MARK_GAP_MM, x, y0 - MARK_GAP_MM - topLen);
+      if (bottomLen > 1) doc.line(x, y0 + gridH + MARK_GAP_MM, x, y0 + gridH + MARK_GAP_MM + bottomLen);
+    }
   }
-  for (let r = 0; r <= usedRows; r++) {
-    const y = y0 + r * plan.cellH;
-    if (leftLen > 1) doc.line(x0 - MARK_GAP_MM, y, x0 - MARK_GAP_MM - leftLen, y);
-    if (rightLen > 1) doc.line(x0 + gridW + MARK_GAP_MM, y, x0 + gridW + MARK_GAP_MM + rightLen, y);
+  for (let r = 0; r < usedRows; r++) {
+    const top = y0 + r * plan.pitchY;
+    for (const y of [top, top + plan.cellH]) {
+      if (leftLen > 1) doc.line(x0 - MARK_GAP_MM, y, x0 - MARK_GAP_MM - leftLen, y);
+      if (rightLen > 1) doc.line(x0 + gridW + MARK_GAP_MM, y, x0 + gridW + MARK_GAP_MM + rightLen, y);
+    }
   }
 }
 
@@ -309,6 +331,8 @@ const rangeNumberField = document.getElementById("rangeNumberField");
 const digitsInput = document.getElementById("digitsInput");
 const rangeFromInput = document.getElementById("rangeFromInput");
 const rangeToInput = document.getElementById("rangeToInput");
+const rangePadInput = document.getElementById("rangePadInput");
+const rangeFormatField = document.getElementById("rangeFormatField");
 const digitsError = document.getElementById("digitsError");
 const bgModeInputs = document.querySelectorAll('input[name="bgMode"]');
 const bgModeCustom = document.getElementById("bgModeCustom");
@@ -357,6 +381,7 @@ function setNumberMode(mode) {
   state.numberMode = mode;
   singleNumberField.hidden = mode !== "single";
   rangeNumberField.hidden = mode !== "range";
+  rangeFormatField.hidden = mode !== "range";
   refresh();
 }
 
@@ -385,6 +410,11 @@ rangeFromInput.addEventListener("input", () => {
 });
 rangeToInput.addEventListener("input", () => {
   state.rangeTo = readRangeInput(rangeToInput);
+  refresh();
+});
+
+rangePadInput.addEventListener("change", () => {
+  state.rangePad = parseInt(rangePadInput.value, 10);
   refresh();
 });
 
@@ -573,14 +603,13 @@ async function downloadPdf() {
       const pageNumbers = numbers.slice(p * plan.perSheet, (p + 1) * plan.perSheet);
 
       pageNumbers.forEach((digits, i) => {
-        const col = i % plan.cols;
-        const row = Math.floor(i / plan.cols);
+        const [x, y] = cardOrigin(plan, i);
         const dataUrl = buildCardImageDataUrl(canvas, state.lengthMm, state.widthMm, { ...state, digits }, plan.rotated);
         doc.addImage(
           dataUrl,
           "JPEG",
-          plan.marginX + col * plan.cellW,
-          plan.marginY + row * plan.cellH,
+          x,
+          y,
           plan.cellW,
           plan.cellH,
         );

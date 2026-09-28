@@ -92,6 +92,15 @@
           <label class="field__hint" for="rangeToInput">To</label>
           <input type="number" id="rangeToInput" min="0" max="999" step="1" value="50" aria-describedby="digitsError">
         </div>
+
+        <div class="field__row field__row--stack" id="rangeFormatField" hidden>
+          <label class="field__hint" for="rangePadInput">Number format</label>
+          <select id="rangePadInput">
+            <option value="1" selected>1, 2, 3 … (no leading zeros)</option>
+            <option value="2">01, 02, 03 … (2 digits)</option>
+            <option value="3">001, 002, 003 … (3 digits)</option>
+          </select>
+        </div>
         <p class="field__error" id="digitsError" aria-live="polite" hidden></p>
       </fieldset>
 
