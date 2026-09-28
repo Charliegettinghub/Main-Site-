@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Number Card Builder — Charlie Williams Centerpieces</title>
-<meta name="description" content="Build a custom centerpiece number card — set exact dimensions, digits, and colors, then download a print-ready PDF.">
+<meta name="description" content="Build custom centerpiece number cards — set exact dimensions, numbers, and colors, then download a print-ready PDF with cutting guides.">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -37,13 +37,23 @@
         <canvas id="previewCanvas" width="360" height="360" role="img" aria-label="Live preview of the number card">Live preview of your custom number card</canvas>
       </div>
       <button class="btn btn--fill" id="downloadBtn" type="button" disabled>Download PDF</button>
-      <p class="builder__hint" id="downloadHint">Print at 100% / actual size — not "fit to page" — for exact dimensions.</p>
+      <p class="builder__summary" id="sheetSummary" aria-live="polite"></p>
+      <p class="builder__hint" id="downloadHint" aria-live="polite"></p>
+
+      <section class="print-guide" aria-labelledby="printGuideTitle">
+        <h2 class="print-guide__title" id="printGuideTitle">How to print</h2>
+        <ol class="print-guide__steps">
+          <li>Load <strong><span id="paperNameGuide">US Letter</span></strong> paper or cardstock and open the PDF.</li>
+          <li>In the print dialog, set scale to <strong>100% / “Actual size”</strong>. Turn <strong>off</strong> “Fit to page” — otherwise every card prints the wrong size.</li>
+          <li>Cut along the thin grey lines. The short marks in the margin line up with every cut, so you can line up a ruler or paper trimmer.</li>
+        </ol>
+      </section>
     </div>
 
     <div class="builder__controls">
       <div class="builder__intro">
         <h1>Number Card Builder</h1>
-        <p>Set exact dimensions, digits, and colors for your centerpiece number card, then download a print-ready PDF sized precisely to what you choose.</p>
+        <p>Set exact dimensions, digits, and colors for your centerpiece number card, then download a print-ready PDF — one card or a whole numbered set, packed onto as few sheets as possible with cutting guides.</p>
       </div>
 
       <div class="field">
@@ -64,11 +74,26 @@
         <p class="field__error" id="widthClampHint" aria-live="polite" hidden></p>
       </div>
 
-      <div class="field">
-        <label class="field__label" for="digitsInput">Digits</label>
-        <input type="text" id="digitsInput" maxlength="3" inputmode="numeric" pattern="[0-9]*" value="5" aria-describedby="digitsError">
-        <p class="field__error" id="digitsError" hidden>Enter 1-3 digits (0-9).</p>
-      </div>
+      <fieldset class="field field--fieldset">
+        <legend class="field__label">Card numbers</legend>
+        <div class="mode-toggle">
+          <label><input type="radio" name="numberMode" id="numberModeSingle" value="single" checked> Single card</label>
+          <label><input type="radio" name="numberMode" id="numberModeRange" value="range"> Range</label>
+        </div>
+
+        <div class="field__row" id="singleNumberField">
+          <label class="field__hint" for="digitsInput">Number</label>
+          <input type="text" id="digitsInput" maxlength="3" inputmode="numeric" pattern="[0-9]*" value="5" aria-describedby="digitsError">
+        </div>
+
+        <div class="field__row" id="rangeNumberField" hidden>
+          <label class="field__hint" for="rangeFromInput">From</label>
+          <input type="number" id="rangeFromInput" min="0" max="999" step="1" value="1" aria-describedby="digitsError">
+          <label class="field__hint" for="rangeToInput">To</label>
+          <input type="number" id="rangeToInput" min="0" max="999" step="1" value="50" aria-describedby="digitsError">
+        </div>
+        <p class="field__error" id="digitsError" aria-live="polite" hidden></p>
+      </fieldset>
 
       <div class="field">
         <label class="field__label" for="fontFamilyInput">Font style</label>
@@ -89,10 +114,26 @@
         </div>
       </div>
 
-      <div class="field">
-        <label class="field__label" for="bgColorInput">Background color</label>
-        <input type="color" id="bgColorInput" value="#1b1c1e">
-      </div>
+      <fieldset class="field field--fieldset">
+        <legend class="field__label">Background color</legend>
+        <div class="swatches">
+          <label class="swatch">
+            <input type="radio" name="bgMode" id="bgModeWhite" value="white" checked>
+            <span class="swatch__chip" style="background:#ffffff"></span>
+            <span class="swatch__name">White</span>
+          </label>
+          <label class="swatch">
+            <input type="radio" name="bgMode" id="bgModeBlack" value="black">
+            <span class="swatch__chip" style="background:#000000"></span>
+            <span class="swatch__name">Black</span>
+          </label>
+          <label class="swatch">
+            <input type="radio" name="bgMode" id="bgModeCustom" value="custom">
+            <input type="color" class="swatch__chip swatch__chip--picker" id="bgColorInput" value="#1f4e79" aria-label="Custom background color">
+            <span class="swatch__name">Custom</span>
+          </label>
+        </div>
+      </fieldset>
 
       <fieldset class="field field--fieldset">
         <legend class="field__label">Text color</legend>
@@ -103,16 +144,24 @@
 
         <div class="field__row" id="solidColorField">
           <label class="field__hint" for="solidColorInput">Color</label>
-          <input type="color" id="solidColorInput" value="#f1efec">
+          <input type="color" id="solidColorInput" value="#111111">
         </div>
 
         <div class="field__row" id="twoColorField" hidden>
           <label class="field__hint" for="innerColorInput">Inner</label>
-          <input type="color" id="innerColorInput" value="#f1efec">
+          <input type="color" id="innerColorInput" value="#111111">
           <label class="field__hint" for="outlineColorInput">Outline</label>
           <input type="color" id="outlineColorInput" value="#ff7a33">
         </div>
       </fieldset>
+
+      <div class="field">
+        <label class="field__label" for="paperInput">Paper size</label>
+        <select id="paperInput">
+          <option value="letter" selected>US Letter (8.5 × 11 in)</option>
+          <option value="a4">A4 (210 × 297 mm)</option>
+        </select>
+      </div>
     </div>
   </div>
 </main>
