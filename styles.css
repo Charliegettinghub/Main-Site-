@@ -398,6 +398,7 @@ ol, ul { margin: 0; padding: 0; list-style: none; }
   font-size: 1.05rem;
   max-width: 46ch;
 }
+.about__intro + .about__intro { margin-top: 1em; }
 
 .timeline__item {
   position: relative;
@@ -429,10 +430,11 @@ ol, ul { margin: 0; padding: 0; list-style: none; }
   margin-bottom: 0.6rem;
   letter-spacing: 0.02em;
 }
-.timeline__item p:last-child {
+.timeline__item p:not(.timeline__org) {
   color: var(--ink-1);
   max-width: 55ch;
 }
+.timeline__item p:not(.timeline__org) + p { margin-top: 0.85em; }
 
 .timeline__tag {
   display: flex;
