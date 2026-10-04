@@ -377,22 +377,6 @@ ol, ul { margin: 0; padding: 0; list-style: none; }
   .about__grid { grid-template-columns: 0.85fr 1.4fr; }
 }
 
-.about__photo {
-  margin: 0 0 1.75rem;
-  max-width: 320px;
-  aspect-ratio: 4 / 5;
-  overflow: hidden;
-  border: 1px solid var(--line-strong);
-  box-shadow: var(--shadow-lg);
-}
-.about__photo img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: 50% 30%;
-  display: block;
-}
-
 .about__intro {
   color: var(--ink-1);
   font-size: 1.05rem;
