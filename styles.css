@@ -615,6 +615,30 @@ ol, ul { margin: 0; padding: 0; list-style: none; }
   scroll-snap-align: start;
 }
 
+.print-carousel__slide--labeled {
+  position: relative;
+  margin: 0;
+}
+.print-carousel__slide--labeled img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.print-carousel__label {
+  position: absolute;
+  top: 0.7rem;
+  left: 0.7rem;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #f1efec;
+  background: rgba(13, 14, 15, 0.6);
+  padding: 0.25rem 0.55rem;
+  border-radius: 3px;
+}
+
 .print-carousel__arrow {
   position: absolute;
   top: 50%;
