@@ -49,14 +49,129 @@ window.addEventListener(
   { passive: true }
 );
 
-// Prints "show more" toggle
-const printsToggle = document.getElementById("printsToggle");
-if (printsToggle) {
-  const printGrid = document.querySelector(".print-grid");
-  printsToggle.addEventListener("click", () => {
-    const expanded = printGrid.classList.toggle("is-expanded");
-    printsToggle.setAttribute("aria-expanded", expanded);
-    printsToggle.textContent = expanded ? "Tap to see fewer projects" : "Tap to see more projects";
+// Prints library: tap a tile to open that project in the viewer
+const printViewer = document.getElementById("printViewer");
+if (printViewer) {
+  const mediaEl = printViewer.querySelector(".print-viewer__media");
+  const titleEl = printViewer.querySelector(".print-viewer__title");
+  const specEl = printViewer.querySelector(".print-viewer__spec");
+  const bodyEl = printViewer.querySelector(".print-viewer__body");
+  let slides = [];
+  let dots = [];
+  let index = 0;
+  let lastFocused = null;
+
+  function showSlide(i) {
+    if (!slides.length) return;
+    index = (i + slides.length) % slides.length;
+    slides.forEach((slide, s) => {
+      const active = s === index;
+      slide.hidden = !active;
+      if (slide.tagName === "VIDEO") active ? slide.play() : slide.pause();
+    });
+    dots.forEach((dot, d) => {
+      dot.classList.toggle("is-active", d === index);
+      dot.setAttribute("aria-selected", d === index);
+    });
+  }
+
+  function buildMedia(detail) {
+    mediaEl.innerHTML = "";
+    slides = [];
+    dots = [];
+
+    const compare = detail.querySelector(".print-compare");
+    if (compare) {
+      mediaEl.appendChild(compare.cloneNode(true));
+      return;
+    }
+
+    const items = detail.querySelectorAll(".print-item__media > li > *");
+    if (!items.length) {
+      const empty = document.createElement("div");
+      empty.className = "print-viewer__empty";
+      empty.textContent = "Photos coming soon";
+      mediaEl.appendChild(empty);
+      return;
+    }
+
+    const stage = document.createElement("div");
+    stage.className = "print-viewer__stage";
+    items.forEach((item) => {
+      const slide = item.cloneNode(true);
+      slide.classList.add("print-viewer__slide");
+      stage.appendChild(slide);
+      slides.push(slide);
+    });
+    mediaEl.appendChild(stage);
+
+    if (slides.length > 1) {
+      [["prev", "‹", "Previous photo", -1], ["next", "›", "Next photo", 1]].forEach(
+        ([dir, label, aria, step]) => {
+          const btn = document.createElement("button");
+          btn.type = "button";
+          btn.className = `lightbox__arrow lightbox__arrow--${dir}`;
+          btn.setAttribute("aria-label", aria);
+          btn.textContent = label;
+          btn.addEventListener("click", () => showSlide(index + step));
+          stage.appendChild(btn);
+        }
+      );
+
+      const dotsEl = document.createElement("div");
+      dotsEl.className = "lightbox__dots print-viewer__dots";
+      dotsEl.setAttribute("role", "tablist");
+      dotsEl.setAttribute("aria-label", "Photo navigation");
+      dots = slides.map((_, i) => {
+        const dot = document.createElement("button");
+        dot.type = "button";
+        dot.className = "lightbox__dot";
+        dot.setAttribute("role", "tab");
+        dot.setAttribute("aria-label", `Photo ${i + 1} of ${slides.length}`);
+        dot.addEventListener("click", () => showSlide(i));
+        dotsEl.appendChild(dot);
+        return dot;
+      });
+      mediaEl.appendChild(dotsEl);
+    }
+
+    showSlide(0);
+  }
+
+  function openViewer(item) {
+    lastFocused = document.activeElement;
+    const detail = item.querySelector(".print-item__detail");
+    titleEl.textContent = item.querySelector(".print-tile__title").textContent;
+    specEl.textContent = item.querySelector(".print-tile__spec").textContent;
+    bodyEl.innerHTML = "";
+    detail.querySelectorAll(":scope > p").forEach((p) => bodyEl.appendChild(p.cloneNode(true)));
+    buildMedia(detail);
+    printViewer.hidden = false;
+    document.body.style.overflow = "hidden";
+    printViewer.querySelector(".print-viewer__close").focus();
+  }
+
+  function closeViewer() {
+    printViewer.hidden = true;
+    mediaEl.innerHTML = "";
+    slides = [];
+    document.body.style.overflow = "";
+    if (lastFocused) lastFocused.focus();
+  }
+
+  document.querySelectorAll(".print-item").forEach((item) => {
+    item.querySelector(".print-tile").addEventListener("click", () => openViewer(item));
+  });
+
+  printViewer.querySelectorAll("[data-viewer-close]").forEach((el) => {
+    el.addEventListener("click", closeViewer);
+  });
+
+  document.addEventListener("keydown", (e) => {
+    if (printViewer.hidden) return;
+    if (e.key === "Escape") closeViewer();
+    if (e.key === "ArrowLeft") showSlide(index - 1);
+    if (e.key === "ArrowRight") showSlide(index + 1);
   });
 }
 
