@@ -461,6 +461,7 @@ ol, ul { margin: 0; padding: 0; list-style: none; }
 @media (min-width: 700px) {
   .card-grid { grid-template-columns: repeat(2, 1fr); }
   .card-grid .card:first-child { grid-column: span 2; }
+  .card-grid .card:last-child:nth-child(even) { grid-column: span 2; }
 }
 
 .card {
