@@ -789,6 +789,11 @@ ol, ul { margin: 0; padding: 0; list-style: none; }
   border-radius: 4px;
 }
 .print-compare__label--after { background: var(--accent-fill); }
+.print-viewer__slide.print-compare { grid-template-rows: minmax(0, 1fr); }
+.print-viewer__slide.print-compare img {
+  height: 100%;
+  max-height: none;
+}
 
 .print-carousel {
   position: relative;

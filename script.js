@@ -80,13 +80,12 @@ if (printViewer) {
     slides = [];
     dots = [];
 
+    // A before/after comparison leads as its own slide, ahead of any photos.
     const compare = detail.querySelector(".print-compare");
-    if (compare) {
-      mediaEl.appendChild(compare.cloneNode(true));
-      return;
-    }
-
-    const items = detail.querySelectorAll(".print-item__media > li > *");
+    const items = [
+      ...(compare ? [compare] : []),
+      ...detail.querySelectorAll(".print-item__media > li > *"),
+    ];
     if (!items.length) {
       const empty = document.createElement("div");
       empty.className = "print-viewer__empty";
